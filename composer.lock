@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "646073c358984833dfa9a8ff690af567",
+    "content-hash": "3c60e63b23a8d03602b313af45695d7f",
     "packages": [
         {
             "name": "brick/math",
@@ -2135,6 +2135,43 @@
                 "source": "https://github.com/laravel/serializable-closure"
             },
             "time": "2022-02-11T19:23:53+00:00"
+        },
+        {
+            "name": "maxsky/lumen-app-key-generator",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/maxsky/Lumen-AppKey-Generator.git",
+                "reference": "f6c588e0034f1681633ed4c9cfe1fcaf22f26267"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/maxsky/Lumen-AppKey-Generator/zipball/f6c588e0034f1681633ed4c9cfe1fcaf22f26267",
+                "reference": "f6c588e0034f1681633ed4c9cfe1fcaf22f26267",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Console\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Max Sky",
+                    "email": "max940213@live.com"
+                }
+            ],
+            "description": "Set the application key in Lumen Framework.",
+            "support": {
+                "issues": "https://github.com/maxsky/Lumen-AppKey-Generator/issues",
+                "source": "https://github.com/maxsky/Lumen-AppKey-Generator/tree/master"
+            },
+            "time": "2019-03-07T05:44:45+00:00"
         },
         {
             "name": "monolog/monolog",
