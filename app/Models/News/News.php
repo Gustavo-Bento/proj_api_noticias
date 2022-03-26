@@ -13,8 +13,10 @@ use Illuminate\Database\Eloquent\Model;
 class News extends Model
 {
     /**
-     * @var string
-     */
+      * Criação das variaveis da noticia
+      *
+      * @var string
+      */
     protected $table = 'noticias';
 
     /**
@@ -46,4 +48,12 @@ class News extends Model
         'descricao' => 'required|min:100',
         'slug' => 'required'
     ];
+
+      /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function images()
+    {
+        return $this-> hasMany(ImageNews::class);
+    }
 }

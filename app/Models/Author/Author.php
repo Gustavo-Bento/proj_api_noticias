@@ -63,4 +63,12 @@ use Illuminate\Database\Eloquent\Model;
         'senha' => 'required|between:6,12',
         'sexo' => 'required|alpha|max:1'
     ];
+
+        /**
+     * @return void
+     */
+    public function news()
+    {
+      return $this->hasMany(News::class);
+    }
  }
