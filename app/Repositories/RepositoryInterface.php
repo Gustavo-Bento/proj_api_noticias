@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use phpDocumentor\Reflection\Types\Boolean;
-
 /**
  * interface RepositoryInterface
  * @package App\Repositories
@@ -23,7 +21,8 @@ interface RepositoryInterface
      * @param array $orderBy
      * @return array
      */
-    public function findAll(int $limit = 10, array $orderBy = []):array;
+    public function findAll(int $limit = 10, array $orderBy = []): array;
+
 
     /**
      * @param integer $id
