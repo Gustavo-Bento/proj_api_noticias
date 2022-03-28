@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_type=1);
+declare(strict_types=1);
 
 namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * class AbstractRepository
- * @package App\Repostiories
+ * Class AbstractRepository
+ * @package App\Repositories
  */
 abstract class AbstractRepository implements RepositoryInterface
 {
@@ -17,6 +17,10 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     protected Model $model;
 
+    /**
+     * AbstractRepository constructor.
+     * @param Model $model
+     */
     public function __construct(Model $model)
     {
         $this->model = $model;
@@ -32,7 +36,7 @@ abstract class AbstractRepository implements RepositoryInterface
     }
 
     /**
-     * @param integer $limit
+     * @param int $limit
      * @param array $orderBy
      * @return array
      */
@@ -40,8 +44,8 @@ abstract class AbstractRepository implements RepositoryInterface
     {
         $results = $this->model::query();
 
-        foreach($orderBy as $key=>$value){
-            if(strstr($key, '-')){
+        foreach ($orderBy as $key => $value) {
+            if (strstr($key, '-')) {
                 $key = substr($key, 1);
             }
 
@@ -50,17 +54,17 @@ abstract class AbstractRepository implements RepositoryInterface
 
         return $results->paginate($limit)
             ->appends([
-                'order_by'=>implode(',', array_keys($orderBy)),
+                'order_by' => implode(',', array_keys($orderBy)),
                 'limit' => $limit
             ])
             ->toArray();
     }
 
     /**
-     * @param integer $id
+     * @param int $id
      * @return array
      */
-    public function findOneBy(int $id):array
+    public function findOneBy(int $id): array
     {
         return $this->model::findOrFail($id)
             ->toArray();
@@ -69,7 +73,7 @@ abstract class AbstractRepository implements RepositoryInterface
     /**
      * @param string $param
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public function editBy(string $param, array $data): bool
     {
@@ -80,47 +84,46 @@ abstract class AbstractRepository implements RepositoryInterface
     }
 
     /**
-     * @param integer $id
-     * @return boolean
+     * @param int $id
+     * @return bool
      */
-    public function delete(int $id):bool
+    public function delete(int $id): bool
     {
-        return $this->model::destroy($id) ?true : false;
+        return $this->model::destroy($id) ? true : false;
     }
 
     /**
      * @param string $string
      * @param array $searchFields
-     * @param integer $limit
+     * @param int $limit
      * @param array $orderBy
      * @return array
      */
     public function searchBy(
         string $string,
         array $searchFields,
-        int $limit=10,
-        array $orderBy=[]
-    ):array
-    {
-        $results = $this->model::where($searchFields[0],'like','%'.$string.'%');
+        int $limit = 10,
+        array $orderBy = []
+    ): array {
+        $results = $this->model::where($searchFields[0], 'like', '%' . $string . '%');
 
-        if(count($searchFields)>1){
-            foreach($searchFields as $field){
-                $results->orWhere($field, 'like','%'.$string.'%');
+        if (count($searchFields) > 1) {
+            foreach ($searchFields as $field) {
+                $results->orWhere($field, 'like', '%' . $string . '%');
             }
         }
 
-        foreach($orderBy as $key => $value){
-            if(strstr($key, '-')){
-                $key - substr($key, 1);
+        foreach ($orderBy as $key => $value) {
+            if (strstr($key, '-')) {
+                $key = substr($key, 1);
             }
 
-            $results -> orderBy($key, $value);
+            $results->orderBy($key, $value);
         }
 
         return $results->paginate($limit)
             ->appends([
-                'order_by'=>implode(',', array_keys($orderBy)),
+                'order_by' => implode(',', array_keys($orderBy)),
                 'q' => $string,
                 'limit' => $limit
             ])
