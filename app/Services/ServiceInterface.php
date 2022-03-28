@@ -8,7 +8,7 @@ namespace App\Services;
  * Interface ServiceInterface
  * @package App\Services
  */
-inteface ServiceInterface
+interface ServiceInterface
 {
     /**
      * @param array $data
