@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace App\Http\Controllers\V1\Author;
 
@@ -22,12 +22,11 @@ class AuthorController extends AbstractController
     ];
 
     /**
+     * AuthorController constructor.
      * @param AuthorService $service
      */
     public function __construct(AuthorService $service)
     {
         parent::__construct($service);
-
     }
-
 }
