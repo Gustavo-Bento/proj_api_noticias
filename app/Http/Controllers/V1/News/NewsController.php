@@ -4,7 +4,6 @@ declare (strict_types=1);
 
 namespace App\Http\Controllers\V1\News;
 
-use App\Helpers\OrderByHelper;
 use App\Http\Controllers\AbstractController;
 use App\Services\News\NewsService;
 use Exception;
@@ -39,7 +38,7 @@ class NewsController extends AbstractController
      * @param integer $author
      * @return JsonResponse
      */
-    public function fundByAuthor(Request $request, int $author): JsonResponse
+    public function findByAuthor(Request $request, int $author): JsonResponse
     {
         try{
             $limit = (int) $request -> get('limit', 10);
@@ -49,11 +48,16 @@ class NewsController extends AbstractController
             $response = $this -> successResponse($result, Response::HTTP_PARTIAL_CONTENT);
         }
         catch(Exception $e){
-            $response = $this -> erroResponse($e);
+            $response = $this -> errorResponse($e);
         }
         return response() -> json($response, $response['status_code']);
     }
 
+    /**
+     * @param Request $request
+     * @param string $param
+     * @return JsonResponse
+     */
     public function findBy(Request $request, string $param): JsonResponse
     {
         try{
@@ -66,6 +70,11 @@ class NewsController extends AbstractController
         return response() -> json($response, $response['status_code']);
     }
 
+    /**
+     * @param Request $request
+     * @param string $param
+     * @return JsonResponse
+     */
     public function deleteBy (Request $request, string $param): JsonResponse
     {
         try{
@@ -80,11 +89,22 @@ class NewsController extends AbstractController
         return response() -> json($response, $response['status_code']);
     }
 
+    /**
+     * @param Request $request
+     * @param integer $author
+     * @return JsonResponse
+     */
     public function deleteByAuthor(Request $request, int $author): JsonResponse
     {
-        $result = $this-> service-> deleteByAuthor($author);
-        $response = $this->successResponse([
+        try{
+            $result = $this -> service -> deleteByAuthor($author);
+        $response = $this -> successResponse([
             'deletado' => $result
         ]);
+        }catch(Exception $e){
+            $response = $this -> errorResponse($e);
+        }
+
+        return response() -> json($response, $response['status_code']);
     }
 }
