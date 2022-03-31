@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-
+use App\Helpers\OrderByHelper;
 use App\Services\ServiceInterface;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -11,7 +13,7 @@ use Illuminate\Http\Response;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 /**
- * Class AbstractController
+ * Class Controller
  * @package App\Http\Controllers
  */
 abstract class AbstractController extends BaseController implements ControllerInterface
@@ -27,11 +29,12 @@ abstract class AbstractController extends BaseController implements ControllerIn
     protected array $searchFields = [];
 
     /**
+     * AbstractController constructor.
      * @param ServiceInterface $service
      */
-    public function __construct (ServiceInterface $service)
+    public function __construct(ServiceInterface $service)
     {
-        $this -> service = $service;
+        $this->service = $service;
     }
 
     /**
@@ -56,40 +59,47 @@ abstract class AbstractController extends BaseController implements ControllerIn
      */
     public function findAll(Request $request): JsonResponse
     {
-        try{
-            $limit = (int) $request -> get('limit', 10);
-            $orderBy = $request -> get('order_by',[]);
-            $searchString = $request-> get('q', '');
-            if(!empty($searchString)){
-                $result = $this -> service -> searchBy(
+        try {
+            $limit = (int) $request->get('limit', 10);
+            $orderBy = $request->get('order_by', []);
+
+            if (!empty($orderBy)) {
+                $orderBy = OrderByHelper::treatOrderBy($orderBy);
+            }
+
+            $searchString = $request->get('q', '');
+
+            if (!empty($searchString)) {
+                $result = $this->service->searchBy(
                     $searchString,
-                    $this -> searchFields,
+                    $this->searchFields,
                     $limit,
                     $orderBy
                 );
-            }else{
-                $result = $this -> service -> findAll($limit, $orderBy);
+            } else {
+                $result = $this->service->findAll($limit, $orderBy);
             }
-            $response = $this -> successResponse($result, Response::HTTP_PARTIAL_CONTENT);
-        }catch(Exception $e){
-            $response = $this -> erroResponse($e);
+
+            $response = $this->successResponse($result, Response::HTTP_PARTIAL_CONTENT);
+        } catch (Exception $e) {
+            $response = $this->errorResponse($e);
         }
 
-        return response() -> json($response, $response['status_code']);
+        return response()->json($response, $response['status_code']);
     }
 
     /**
-     * @param ClientRequest $request
-     * @param integer $id
+     * @param Request $request
+     * @param int $id
      * @return JsonResponse
      */
-    public function findOneBy(ClientRequest $request, int $id): JsonResponse
+    public function findOneBy(Request $request, int $id): JsonResponse
     {
-        try{
-            $result = $this -> service -> findOneBy($id);
-            $response = $this -> successResponse($result);
-        }catch(Exception $e){
-            $response = $this -> erroResponse($e);
+        try {
+            $result = $this->service->findOneBy($id);
+            $response = $this->successResponse($result);
+        } catch (Exception $e) {
+            $response = $this->errorResponse($e);
         }
 
         return response()->json($response, $response['status_code']);
@@ -98,39 +108,40 @@ abstract class AbstractController extends BaseController implements ControllerIn
     /**
      * @param Request $request
      * @param string $param
-     * @return void
+     * @return JsonResponse
      */
     public function editBy(Request $request, string $param): JsonResponse
     {
-        try{
-            $result['registro_alterado'] = $this -> service -> editBy($param, $request->all());
-            $response = $this ->successResponse($result);
-        }catch(Exception $e){
-            $response = $this-> erroResponse($e);
+        try {
+            $result['registro_alterado'] = $this->service->editBy($param, $request->all());
+            $response = $this->successResponse($result);
+        } catch (Exception $e) {
+            $response = $this->errorResponse($e);
         }
-        return response() -> json ($response, $response['status_code']);
+
+        return response()->json($response, $response['status_code']);
     }
 
     /**
      * @param Request $request
-     * @param integer $id
+     * @param int $id
      * @return JsonResponse
      */
     public function delete(Request $request, int $id): JsonResponse
     {
-        try{
-            $result['registro_deletado'] = $this -> service -> delete($id);
-            $response = $this -> successResponse($result);
-        }catch(Exception $e){
-            $response = $this -> erroResponse($e);
+        try {
+            $result['registro_deletado'] = $this->service->delete($id);
+            $response = $this->successResponse($result);
+        } catch (Exception $e) {
+            $response = $this->errorResponse($e);
         }
 
-        return response() -> json($response, $response['status_code']);
+        return response()->json($response, $response['status_code']);
     }
 
     /**
      * @param array $data
-     * @param [type] $statusCode
+     * @param int $statusCode
      * @return array
      */
     protected function successResponse(array $data, int $statusCode = Response::HTTP_OK): array
@@ -143,16 +154,15 @@ abstract class AbstractController extends BaseController implements ControllerIn
 
     /**
      * @param Exception $e
-     * @param [type] $statusCode
+     * @param int $statuCode
      * @return array
      */
-    protected function erroResponse(Exception $e, int $statusCode = Response::HTTP_BAD_REQUEST): array
+    protected function errorResponse(Exception $e, int $statuCode = Response::HTTP_BAD_REQUEST): array
     {
         return [
-            'status_code' => $statusCode,
+            'status_code' => $statuCode,
             'error' => true,
             'error_description' => $e->getMessage()
         ];
     }
-
 }
