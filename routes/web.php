@@ -2,6 +2,8 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Services\ImageNewsController;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -38,11 +40,6 @@ $router -> group(['prefix' => 'api/v1' , 'namespace' => 'V1\Author'], function (
     ]);
 });
 
-
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
-
 $router -> group(['prefix' => 'api/v1' , 'namespace' => 'V1\News'], function () use ($router){
     $router -> post('/noticias',[
         'uses' => 'NewsController@create'
@@ -67,5 +64,32 @@ $router -> group(['prefix' => 'api/v1' , 'namespace' => 'V1\News'], function () 
     ]);
     $router -> delete('/noticias/{author}',[
         'uses' => 'NewsController@deleteByAuthor'
+    ]);
+});
+
+$router -> group(['prefix' => 'api/v1' , 'namespace' => 'V1\ImageNews'], function () use ($router){
+    $router -> post('/imagens-noticias',[
+        'uses' => 'ImageNewsController@create'
+    ]);
+    $router -> get('/imagens-noticias',[
+        'uses' => 'ImageNewsController@findAll'
+    ]);
+    $router -> get('/imagens-noticias/{news}',[
+        'uses' => 'ImageNewsController@findByNews'
+    ]);
+    $router -> get('/imagens-noticias/{id}',[
+        'uses' => 'ImageNewsController@findOneBy'
+    ]);
+    $router -> put('/imagens-noticias/{param}',[
+        'uses' => 'ImageNewsCOntroller@editBy'
+    ]);
+    $router -> patch('/imagens-noticias/{param}',[
+        'uses' => 'ImageNewsController@editBy'
+    ]);
+    $router -> delete('/imagens-noticias/{news}', [
+        'uses' => 'imageNewsController@deleteByNews'
+    ]);
+    $router -> delete('/imagens-noticias/{id}',[
+        'uses' => 'imageNewsController@delete'
     ]);
 });
