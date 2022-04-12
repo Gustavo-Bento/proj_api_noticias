@@ -1,5 +1,10 @@
 <?php
 
+use App\Providers\AuthorServiceProvider;
+use App\Providers\ImageNewsServiceProvider;
+use App\Providers\NewsServiceProvider;
+use App\Services\ImageNews\ImageNewsService;
+
 require_once __DIR__.'/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
@@ -94,7 +99,9 @@ $app->configure('app');
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
-
+$app -> register(AuthorServiceProvider::class);
+$app -> register(NewsServiceProvider::class);
+$app -> register(ImageNewsServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
